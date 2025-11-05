@@ -1,0 +1,42 @@
+# Optimizer-confound control (critique C3, registered 2026-06-10):
+# TinyStories packed budget trained with the WEB arm-B optimizer settings
+# (matrix_lr 0.02, embed_lr 0.2, wd 0.0) instead of the v1 settings
+# (0.04 / 0.6 / 0.2). The web cells differ from TinyStories cells in BOTH
+# corpus and optimizer; this cell isolates the optimizer axis.
+# Registered prediction: pronoun_gender_ref classifies RECOVERED
+# (final >= 0.8) here — i.e. corpus, not optimizer, drives displacement.
+# Falsifier: DISPLACED/PARTIAL here means the wd=0 + low-LR arm is a
+# confound and all web-vs-TinyStories contrasts must be re-run arm-matched.
+run_name: ts_packed_armB
+wandb_project: fogen-phase
+
+model:
+  vocab_size: 8192
+  n_layer: 4
+  d_model: 256
+  n_head: 2
+  ctx_len: 2048
+
+batch_seqs: 32
+
+train:
+  steps: 4400
+  matrix_lr: 0.02
+  embed_lr: 0.2
+  weight_decay: 0.0
+  warmdown_frac: 0.3
+
+data:
+  tokenizer_dir: data/tinystories/bpe8192
+  shard_dir: data/tinystories/bpe8192/shards
+
+probes:
+  battery_path: data/probes/v1/battery.jsonl
+  every: 5
+  dense_until: 50
+  batch_size: 256
+
+checkpointing:
+  ckpt_every: 100
+  dense_windows:
+    - [100, 2400, 25]

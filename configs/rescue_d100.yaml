@@ -1,0 +1,36 @@
+# Step-6 RESCUE cell: web_packed_v2 + synthetic name->pronoun evidence at
+# dose 1.0x TS girl-class density (registered amendment 2026-06-10).
+# Mixed shard dir = original ClimbMix shards + gen_rescue_docs.py output.
+run_name: rescue_d100
+wandb_project: fogen-phase
+
+model:
+  vocab_size: 8192
+  n_layer: 4
+  d_model: 256
+  n_head: 2
+  ctx_len: 2048
+
+batch_seqs: 32
+
+train:
+  steps: 4400
+  matrix_lr: 0.02
+  embed_lr: 0.2
+  weight_decay: 0.0
+  warmdown_frac: 0.3
+
+data:
+  tokenizer_dir: data/climbmix/bpe8192
+  shard_dir: data/climbmix/bpe8192/rescue_d100/shards
+
+probes:
+  battery_path: data/probes/v1/battery.jsonl   # frozen in-loop battery, policy of 2026-06-10
+  every: 5
+  dense_until: 50
+  batch_size: 256
+
+checkpointing:
+  ckpt_every: 100
+  dense_windows:
+    - [100, 2400, 25]

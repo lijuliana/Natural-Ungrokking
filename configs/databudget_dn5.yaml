@@ -1,0 +1,40 @@
+# First controlled data-budget cell of the phase diagram (PLAN.md Week 2
+# pilot, pulled forward after the v1 fidelity gate proved unclosable from the
+# paper spec alone — see RESEARCH_LOG 2026-06-10). Packed training, identical
+# to v1_repro.yaml except data.max_tokens caps unique data at 57.5M tokens
+# (D/N = 5 for N = 11.5M params); 4400 steps x 65,536 = 288M consumed = 5.0
+# epochs. Registered predictions in the research log entry of 2026-06-10.
+run_name: databudget_dn5
+wandb_project: fogen-phase
+
+model:
+  vocab_size: 8192
+  n_layer: 4
+  d_model: 256
+  n_head: 2
+  ctx_len: 2048
+
+batch_seqs: 32            # 32 * 2048 = 65,536 tokens/step, all real
+
+train:
+  steps: 4400
+  matrix_lr: 0.04
+  embed_lr: 0.6
+  weight_decay: 0.2
+  warmdown_frac: 0.3
+
+data:
+  tokenizer_dir: data/tinystories/bpe8192
+  shard_dir: data/tinystories/bpe8192/shards
+  max_tokens: 57_500_000
+
+probes:
+  battery_path: data/probes/v1/battery.jsonl
+  every: 5
+  dense_until: 50
+  batch_size: 256
+
+checkpointing:
+  ckpt_every: 100
+  dense_windows:
+    - [100, 2400, 25]

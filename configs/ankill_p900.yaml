@@ -1,0 +1,35 @@
+# a/an KILL cell: v1_repro + an->a flips before vowel-initial words at
+# rate 0.9 (build_an_kill_shards.py; registered DECISIONS.md 2026-06-11).
+run_name: ankill_p900
+wandb_project: fogen-phase
+
+model:
+  vocab_size: 8192
+  n_layer: 4
+  d_model: 256
+  n_head: 2
+  ctx_len: 2048
+
+batch_seqs: 32            # 32 * 2048 = 65,536 tokens/step (v1)
+
+train:
+  steps: 4400             # v1 range was 3,946-4,869 (~258-319M tokens)
+  matrix_lr: 0.04
+  embed_lr: 0.6
+  weight_decay: 0.2       # decays linearly to 0 (v1)
+  warmdown_frac: 0.3      # cosine warmdown over final 30%
+
+data:
+  tokenizer_dir: data/tinystories/bpe8192
+  shard_dir: data/tinystories/bpe8192/ankill_p900/shards
+
+probes:
+  battery_path: data/probes/v1/battery.jsonl
+  every: 5                # v1: every 5 steps
+  dense_until: 50         # v1: every step for first 50
+  batch_size: 256
+
+checkpointing:
+  ckpt_every: 100
+  dense_windows:          # [lo, hi, every] — v1 peaks fell in steps 180-2130
+    - [100, 2400, 25]

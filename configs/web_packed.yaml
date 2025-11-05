@@ -1,0 +1,41 @@
+# Web-corpus cell, fresh-data budget: 11.5M on ClimbMix (v1's actual corpus).
+# Gate A extension (RESEARCH_LOG 2026-06-10): same model/schedule as
+# v1_repro, only the corpus (and its tokenizer) changes — isolates the
+# rule-frequency/support axis. rvp1 battery scored offline post hoc.
+# v2 (2026-06-10): TinyStories hparams failed on ClimbMix (loss stuck ~7.8
+# > unigram 7.25; runs quarantined). LRs from registered 600-step sweep,
+# arm B won (loss@580 3.906 vs C 4.033). New run_name keeps quarantined
+# artifacts distinct in S3.
+run_name: web_packed_v2
+wandb_project: fogen-phase
+
+model:
+  vocab_size: 8192
+  n_layer: 4
+  d_model: 256
+  n_head: 2
+  ctx_len: 2048
+
+batch_seqs: 32
+
+train:
+  steps: 4400
+  matrix_lr: 0.02
+  embed_lr: 0.2
+  weight_decay: 0.0
+  warmdown_frac: 0.3
+
+data:
+  tokenizer_dir: data/climbmix/bpe8192
+  shard_dir: data/climbmix/bpe8192/shards
+
+probes:
+  battery_path: data/probes/v1/battery.jsonl   # frozen in-loop battery, policy of 2026-06-10
+  every: 5
+  dense_until: 50
+  batch_size: 256
+
+checkpointing:
+  ckpt_every: 100
+  dense_windows:
+    - [100, 2400, 25]

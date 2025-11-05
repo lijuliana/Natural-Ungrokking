@@ -1,0 +1,34 @@
+# Local CPU end-to-end smoke: tiny everything. Verifies train loop -> probe
+# evals -> checkpoints -> logs without GPUs or real data.
+run_name: local_smoke
+wandb_project: fogen-phase
+
+model:
+  vocab_size: 512
+  n_layer: 2
+  d_model: 64
+  n_head: 2
+  ctx_len: 64
+
+batch_seqs: 4
+
+train:
+  steps: 40
+  matrix_lr: 0.04
+  embed_lr: 0.6
+  weight_decay: 0.2
+  warmdown_frac: 0.3
+
+data:
+  tokenizer_dir: data/local_smoke
+  shard_dir: data/local_smoke/shards
+
+probes:
+  battery_path: data/probes/v1/battery.jsonl
+  every: 20
+  dense_until: 2
+  batch_size: 64
+
+checkpointing:
+  ckpt_every: 20
+  dense_windows: []

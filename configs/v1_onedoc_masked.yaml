@@ -1,0 +1,42 @@
+# H1b diagnostic (RESEARCH_LOG 2026-06-10): one story per context window with
+# EOT padding MASKED from the loss (ignore_index). H1 (padding in loss) was
+# REJECTED: the model degenerated into an EOT-predictor (val_bpb 2.74,
+# mean nll 7.8 nats ~ near-uniform on real text, probe finals ~0).
+# H1b keeps the ~31M-real-token regime (mean story 219 tok, batch 32) without
+# the degenerate attractor. Registered predictions in the research log entry
+# dated 2026-06-10 (filled in from the packed bpb-vs-tokens curve).
+run_name: v1_onedoc_masked
+wandb_project: fogen-phase
+
+model:
+  vocab_size: 8192
+  n_layer: 4
+  d_model: 256
+  n_head: 2
+  ctx_len: 2048
+
+batch_seqs: 32            # ~7,015 real (unmasked) tokens/step
+
+train:
+  steps: 4400
+  matrix_lr: 0.04
+  embed_lr: 0.6
+  weight_decay: 0.2
+  warmdown_frac: 0.3
+
+data:
+  tokenizer_dir: data/tinystories/bpe8192
+  shard_dir: data/tinystories/bpe8192/shards
+  one_doc_per_seq: true
+  mask_padding: true
+
+probes:
+  battery_path: data/probes/v1/battery.jsonl
+  every: 5
+  dense_until: 50
+  batch_size: 256
+
+checkpointing:
+  ckpt_every: 100
+  dense_windows:
+    - [100, 2400, 25]

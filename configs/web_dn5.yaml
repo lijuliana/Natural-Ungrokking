@@ -1,0 +1,37 @@
+# Web-corpus cell at D/N = 5 (57.5M unique ClimbMix tokens, 5.0 epochs).
+# Completes the 2 corpora x 3 budgets Step-3 grid; pairs with
+# databudget_dn5 (TinyStories). Arm-B LRs (sweep, RESEARCH_LOG 2026-06-10).
+run_name: web_dn5_v2
+wandb_project: fogen-phase
+
+model:
+  vocab_size: 8192
+  n_layer: 4
+  d_model: 256
+  n_head: 2
+  ctx_len: 2048
+
+batch_seqs: 32
+
+train:
+  steps: 4400
+  matrix_lr: 0.02
+  embed_lr: 0.2
+  weight_decay: 0.0
+  warmdown_frac: 0.3
+
+data:
+  tokenizer_dir: data/climbmix/bpe8192
+  shard_dir: data/climbmix/bpe8192/shards
+  max_tokens: 57_500_000
+
+probes:
+  battery_path: data/probes/v1/battery.jsonl
+  every: 5
+  dense_until: 50
+  batch_size: 256
+
+checkpointing:
+  ckpt_every: 100
+  dense_windows:
+    - [100, 2400, 25]

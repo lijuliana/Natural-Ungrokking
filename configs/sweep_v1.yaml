@@ -1,0 +1,28 @@
+# Controlled sweep v1 — single source of truth. DRAFT until Week-2 pilot validates.
+sweep: sweep_v1
+corpora: [tinystories, fineweb_edu]
+tokenizer: bpe8192   # v1-compatible for tinystories; fineweb tokenizer TBD Week 1
+
+sizes:                # nanochat-style family; shape held fixed, scaled
+  1M:   {layers: 2, d_model: 128,  heads: 2,  seeds: 10}
+  3M:   {layers: 3, d_model: 192,  heads: 3,  seeds: 10}
+  11M:  {layers: 4, d_model: 256,  heads: 2,  seeds: 10}   # = v1 architecture
+  30M:  {layers: 6, d_model: 384,  heads: 6,  seeds: 10}
+  100M: {layers: 8, d_model: 640,  heads: 10, seeds: 5}
+  300M: {layers: 12, d_model: 960, heads: 15, seeds: 5}
+  # 1B stretch tier added only after Week-3 review
+
+data_budgets_tokens_per_param: [5, 20, 80, 320]
+replication_seeds_per_cell: 3      # quarantined; sizes <= 30M only
+
+optimizer: {matrix: muon, embed_scalar: adamw, wd: 0.2_decaying, schedule: cosine_warmdown}
+precision: bf16
+
+checkpointing:
+  base_grid: log-spaced, 60 points
+  dense_window: {trigger: "any probe moves >5% (smoothed) in online monitor", every_pct_steps: 0.5}
+  save: weights_only_bf16
+  resume_state: rolling, every 10 min
+
+ablations:
+  depth_vs_width_at_30M: [{layers: 12, d_model: 272}, {layers: 3, d_model: 544}]

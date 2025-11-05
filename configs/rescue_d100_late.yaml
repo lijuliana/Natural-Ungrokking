@@ -1,0 +1,43 @@
+# Step-6T LATE-WINDOW rescue cell (registered amendment 2026-06-11):
+# phase A (steps 0-2800) is the un-injected base web shard dir; phase B
+# (steps >= 2800) is web + synthetic evidence at within-window density
+# 4400/1600 = 2.75x uniform-d100, total dose exactly 1.0 x delta_TS.
+# Supporting arm (density control for the early arm); LR-warmdown overlap
+# disclosed in the amendment. Identical model/optimizer/probe/ckpt
+# settings to rescue_d100.
+run_name: rescue_d100_late
+wandb_project: fogen-phase
+
+model:
+  vocab_size: 8192
+  n_layer: 4
+  d_model: 256
+  n_head: 2
+  ctx_len: 2048
+
+batch_seqs: 32
+
+train:
+  steps: 4400
+  matrix_lr: 0.02
+  embed_lr: 0.2
+  weight_decay: 0.0
+  warmdown_frac: 0.3
+
+data:
+  tokenizer_dir: data/climbmix/bpe8192
+  shard_dir: data/climbmix/bpe8192/shards
+  phase_b:
+    shard_dir: data/climbmix/bpe8192/rescue_d100_late/shards
+    switch_step: 2800
+
+probes:
+  battery_path: data/probes/v1/battery.jsonl   # frozen in-loop battery, policy of 2026-06-10
+  every: 5
+  dense_until: 50
+  batch_size: 256
+
+checkpointing:
+  ckpt_every: 100
+  dense_windows:
+    - [100, 2400, 25]

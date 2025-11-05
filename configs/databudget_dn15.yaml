@@ -1,0 +1,40 @@
+# Second data-budget cell: D/N = 1.5 (17.25M unique tokens for N = 11.5M).
+# Motivated by databudget_dn5 result (RESEARCH_LOG 2026-06-10): D/N=5 is still
+# in the saturated phase (val_bpb 0.593 ~= full-data 0.595, no clean
+# transience), so the boundary is at lower D/N. 4400 steps x 65,536 = 288M
+# consumed = 16.7 epochs. Otherwise identical to databudget_dn5.yaml.
+# Registered predictions in the research log entry of 2026-06-10.
+run_name: databudget_dn15
+wandb_project: fogen-phase
+
+model:
+  vocab_size: 8192
+  n_layer: 4
+  d_model: 256
+  n_head: 2
+  ctx_len: 2048
+
+batch_seqs: 32            # 32 * 2048 = 65,536 tokens/step, all real
+
+train:
+  steps: 4400
+  matrix_lr: 0.04
+  embed_lr: 0.6
+  weight_decay: 0.2
+  warmdown_frac: 0.3
+
+data:
+  tokenizer_dir: data/tinystories/bpe8192
+  shard_dir: data/tinystories/bpe8192/shards
+  max_tokens: 17_250_000
+
+probes:
+  battery_path: data/probes/v1/battery.jsonl
+  every: 5
+  dense_until: 50
+  batch_size: 256
+
+checkpointing:
+  ckpt_every: 100
+  dense_windows:
+    - [100, 2400, 25]

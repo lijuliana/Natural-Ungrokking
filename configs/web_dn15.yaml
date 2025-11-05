@@ -1,0 +1,38 @@
+# Web-corpus cell at D/N = 1.5 (17.25M unique ClimbMix tokens, 16.7 epochs).
+# Identical to web_packed except max_tokens; pairs with databudget_dn15
+# (TinyStories) to complete the 2x2 corpus x budget Gate A extension.
+# v2 (2026-06-10): sweep-winner LRs (arm B), see web_packed.yaml note.
+run_name: web_dn15_v2
+wandb_project: fogen-phase
+
+model:
+  vocab_size: 8192
+  n_layer: 4
+  d_model: 256
+  n_head: 2
+  ctx_len: 2048
+
+batch_seqs: 32
+
+train:
+  steps: 4400
+  matrix_lr: 0.02
+  embed_lr: 0.2
+  weight_decay: 0.0
+  warmdown_frac: 0.3
+
+data:
+  tokenizer_dir: data/climbmix/bpe8192
+  shard_dir: data/climbmix/bpe8192/shards
+  max_tokens: 17_250_000
+
+probes:
+  battery_path: data/probes/v1/battery.jsonl
+  every: 5
+  dense_until: 50
+  batch_size: 256
+
+checkpointing:
+  ckpt_every: 100
+  dense_windows:
+    - [100, 2400, 25]

@@ -1,0 +1,39 @@
+# H1 diagnostic for the failed v1 fidelity gate (RESEARCH_LOG 2026-06-10):
+# hypothesis that v1 trained one story per 2048-token context (EOT padding in
+# loss), making effective data ~10x smaller. Identical to v1_repro.yaml
+# except data.one_doc_per_seq. Predicted if H1 true: val_bpb ~= 1.15,
+# graded probe finals (Table 9 fingerprint), eos/modal/adjective transient.
+run_name: v1_onedoc
+wandb_project: fogen-phase
+
+model:
+  vocab_size: 8192
+  n_layer: 4
+  d_model: 256
+  n_head: 2
+  ctx_len: 2048
+
+batch_seqs: 32            # 32 * 2048 = 65,536 nominal tokens/step
+
+train:
+  steps: 4400
+  matrix_lr: 0.04
+  embed_lr: 0.6
+  weight_decay: 0.2
+  warmdown_frac: 0.3
+
+data:
+  tokenizer_dir: data/tinystories/bpe8192
+  shard_dir: data/tinystories/bpe8192/shards
+  one_doc_per_seq: true
+
+probes:
+  battery_path: data/probes/v1/battery.jsonl
+  every: 5
+  dense_until: 50
+  batch_size: 256
+
+checkpointing:
+  ckpt_every: 100
+  dense_windows:
+    - [100, 2400, 25]

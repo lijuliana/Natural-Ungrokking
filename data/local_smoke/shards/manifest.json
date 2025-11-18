@@ -1,0 +1,11 @@
+{
+  "total_tokens": 99000,
+  "shards": [
+    {
+      "file": "shard_00000.bin",
+      "tokens": 99000,
+      "sha256": "4bd5109a6284a8822c1536cc2432d0f3f11b1c21fca83387e5d6f17d7232ee9f"
+    }
+  ],
+  "dtype": "uint16"
+}

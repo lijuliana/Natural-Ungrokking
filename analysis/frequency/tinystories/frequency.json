@@ -1,0 +1,78 @@
+{
+  "total_words": 364237317,
+  "end_of_sentence": {
+    "support_per_million": 89927.62540033755,
+    "compete_per_million": 45426.83362671486,
+    "support_ratio": 0.6643861313971511
+  },
+  "comparative_than": {
+    "support_per_million": 181.9280916787557,
+    "compete_per_million": 5.8341084255241205,
+    "support_ratio": 0.9689282058780524
+  },
+  "determiner_a_an": {
+    "support_per_million": 1317.7507564388302,
+    "compete_per_million": 40.52028529520494,
+    "support_ratio": 0.9701677470473973
+  },
+  "modal_continuation": {
+    "support_per_million": 1255.8844979631783,
+    "compete_per_million": 254.12552662746523,
+    "support_ratio": 0.8317060665233944
+  },
+  "adjective_order_size_color": {
+    "support_per_million": 202.5080807412163,
+    "compete_per_million": 0.016472776730891633,
+    "support_ratio": 0.9999186628167066
+  },
+  "past_tense": {
+    "support_per_million": 13101.78770068197,
+    "compete_per_million": 902.4802914414175,
+    "support_ratio": 0.9355567679832311
+  },
+  "subj_verb_agreement": {
+    "support_per_million": 865.6828536873942,
+    "compete_per_million": 573.8291774206101,
+    "support_ratio": 0.6013724338386188
+  },
+  "reflexive": {
+    "support_per_million": 630.8771487024763,
+    "compete_per_million": 0.0,
+    "support_ratio": 1.0
+  },
+  "close_quote": {
+    "support_per_million": 11405.20426137446,
+    "compete_per_million": 43.33987557897589,
+    "support_ratio": 0.9962143766875052
+  },
+  "numeric_sequence": {
+    "support_per_million": 28.31395773761424,
+    "compete_per_million": 0.0,
+    "support_ratio": 1.0
+  },
+  "idiom_ever_after": {
+    "support_per_million": 93.2441526852121,
+    "compete_per_million": 13.03820278250073,
+    "support_ratio": 0.8773248605083696
+  },
+  "pronoun_gender": {
+    "support_per_million": 41729.07137903171,
+    "compete_per_million": 0.0,
+    "support_ratio": 1.0
+  },
+  "proper_noun_intro": {
+    "support_per_million": 2404.8551840172927,
+    "compete_per_million": 349.46721288307754,
+    "support_ratio": 0.8731204403390259
+  },
+  "relative_clause": {
+    "support_per_million": 30.301672796475163,
+    "compete_per_million": 0.0,
+    "support_ratio": 1.0
+  },
+  "_meta": {
+    "dataset": "roneneldan/TinyStories",
+    "split": "train",
+    "max_docs": null
+  }
+}

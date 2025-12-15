@@ -1,0 +1,15 @@
+capability,linguistic_type,support_per_million,compete_per_million,support_ratio,corpus
+adjective_order,structural,202.51,0.02,0.9999,roneneldan/TinyStories
+close_quote,structural,11405.20,43.34,0.9962,roneneldan/TinyStories
+common_idiom,lexical,93.24,13.04,0.8773,roneneldan/TinyStories
+comparative_than,lexical,181.93,5.83,0.9689,roneneldan/TinyStories
+determiner_a_an,lexical,1317.75,40.52,0.9702,roneneldan/TinyStories
+end_of_sentence,structural,89927.63,45426.83,0.6644,roneneldan/TinyStories
+modal_continuation,structural,1255.88,254.13,0.8317,roneneldan/TinyStories
+numeric_sequence,lexical,28.31,0.00,1.0000,roneneldan/TinyStories
+past_tense_consistency,structural,13101.79,902.48,0.9356,roneneldan/TinyStories
+pronoun_gender,lexical,41729.07,0.00,1.0000,roneneldan/TinyStories
+proper_noun_completion,lexical,2404.86,349.47,0.8731,roneneldan/TinyStories
+reflexive_pronoun,structural,630.88,0.00,1.0000,roneneldan/TinyStories
+relative_clause_agreement,structural,30.30,0.00,1.0000,roneneldan/TinyStories
+subj_verb_agreement,structural,865.68,573.83,0.6014,roneneldan/TinyStories

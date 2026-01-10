@@ -1,0 +1,25 @@
+# Always-on eval consumer: polls S3 for new checkpoints, runs the probe battery,
+# writes jsonl results to S3 + W&B. Scale horizontally by launching N copies
+# with different --shard i/N.
+name: fogen-eval-consumer
+
+resources:
+  cloud: aws
+  accelerators: A10G:1
+  use_spot: true
+  spot_recovery: EAGER_NEXT_REGION
+
+file_mounts:
+  /workdir: .
+
+setup: |
+  cd /workdir && pip install -q -e . awscli
+  pip install -q "torch==2.5.1" --index-url https://download.pytorch.org/whl/cu121
+
+run: |
+  cd /workdir
+  python -m fogen.evals.consumer \
+    --battery s3://fogen-phase/data/probes/$BATTERY_REV/ \
+    --watch   s3://fogen-phase/ckpts/$SWEEP/ \
+    --out     s3://fogen-phase/evals/$BATTERY_REV/ \
+    --shard $SHARD --wandb-project fogen-phase

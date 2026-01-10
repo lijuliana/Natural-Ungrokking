@@ -1,0 +1,21 @@
+# Persistent dev GPU box for data prep + v1 reproduction runs.
+#   sky launch -c dev infra/skypilot/dev.yaml
+#   sky exec dev "cd /workdir && python scripts/prepare_tinystories.py"
+# Stop when idle: sky stop dev   (disk persists; restart with sky start dev)
+name: fogen-dev
+
+resources:
+  cloud: aws
+  accelerators: A10G:1
+  use_spot: false        # dev box should not vanish mid-session
+  disk_size: 256
+
+file_mounts:
+  /workdir: .
+
+setup: |
+  cd /workdir && pip install -q -e . awscli datasets
+  pip install -q "torch==2.5.1" --index-url https://download.pytorch.org/whl/cu121
+
+run: |
+  echo "dev box ready"

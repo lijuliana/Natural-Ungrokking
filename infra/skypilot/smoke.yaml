@@ -1,0 +1,17 @@
+# 1-GPU smoke test: verifies SkyPilot + AWS + S3 access end to end.
+# Usage: sky launch -c smoke infra/skypilot/smoke.yaml --down
+name: fogen-smoke
+
+resources:
+  cloud: aws
+  accelerators: A10G:1
+  use_spot: true
+
+setup: |
+  pip install -q awscli && pip list 2>/dev/null | grep -qi "^torch " || pip install -q torch --index-url https://download.pytorch.org/whl/cu121
+  pip install -q "torch==2.5.1" --index-url https://download.pytorch.org/whl/cu121
+
+run: |
+  nvidia-smi
+  python -c "import torch; print('torch', torch.__version__, 'cuda', torch.cuda.is_available())"
+  aws s3 ls s3://fogen-phase/ && echo "S3 OK"

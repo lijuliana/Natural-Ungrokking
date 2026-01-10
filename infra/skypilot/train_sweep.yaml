@@ -1,0 +1,33 @@
+# One training run per sweep cell. Launched via scripts/launch_sweep.py
+# which fills the env vars per cell.
+# Usage (single cell, by hand):
+#   sky jobs launch infra/skypilot/train_sweep.yaml \
+#     --env CONFIG=configs/sweep_v1_30M_d80.yaml --env SEED=42 \
+#     --env RUN_ID=sweep_v1/30M/d80/tinystories/s42
+#
+# NOTE: fogen.training.train has no resume; a spot preemption restarts the
+# cell from step 0 (acceptable for short cells; revisit before launching
+# multi-hour cells on spot — see logs/DECISIONS.md).
+name: fogen-train
+
+resources:
+  cloud: aws
+  accelerators: A100:1        # launch_sweep.py overrides per size tier (A10G small, 8xA100/H100 big)
+  use_spot: true
+  spot_recovery: EAGER_NEXT_REGION
+
+file_mounts:
+  /workdir: .
+
+setup: |
+  cd /workdir && pip install -q -e . awscli
+  pip install -q "torch==2.5.1" --index-url https://download.pytorch.org/whl/cu121
+
+run: |
+  cd /workdir
+  OUT=runs/$(basename $RUN_ID)
+  python -m fogen.training.train \
+    --config $CONFIG --seed $SEED --out $OUT
+  CKPT=$(ls $OUT/ckpts/step*.safetensors | sort | tail -1)
+  python scripts/eval_bpb.py $CKPT --out $OUT/val_bpb.jsonl
+  aws s3 sync $OUT s3://fogen-phase/runs/$RUN_ID/

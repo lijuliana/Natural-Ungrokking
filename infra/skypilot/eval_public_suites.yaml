@@ -1,0 +1,26 @@
+# Probe battery over public checkpointed suites (Pythia 70M–12B, OLMo 1B/7B).
+# One job per model size; HF revisions enumerate the checkpoints.
+#   sky jobs launch infra/skypilot/eval_public_suites.yaml \
+#     --env MODEL=EleutherAI/pythia-410m --env BATTERY_REV=v1
+name: fogen-eval-public
+
+resources:
+  cloud: aws
+  accelerators: A100-80GB:1   # downsize to A10G for <=410m models
+  use_spot: true
+  spot_recovery: EAGER_NEXT_REGION
+
+file_mounts:
+  /workdir: .
+
+setup: |
+  cd /workdir && pip install -q -e . awscli
+  pip install -q "torch==2.5.1" --index-url https://download.pytorch.org/whl/cu121
+
+run: |
+  cd /workdir
+  python -m fogen.evals.run_public_suite \
+    --model $MODEL --all-revisions \
+    --battery s3://fogen-phase/data/probes/$BATTERY_REV/ \
+    --out s3://fogen-phase/evals/$BATTERY_REV/public/ \
+    --wandb-project fogen-phase

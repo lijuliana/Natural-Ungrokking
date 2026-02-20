@@ -1,0 +1,20 @@
+cff-version: 1.2.0
+message: "If you use this code, please cite the paper below."
+title: "Natural Ungrokking: Asymmetric Control of Which Rules Survive Pretraining"
+authors:
+  - family-names: Li
+    given-names: Juliana
+  - family-names: Sreedhar
+    given-names: Diya
+year: 2026
+repository-code: "https://github.com/lijuliana/Natural-Ungrokking"
+preferred-citation:
+  type: article
+  title: "Natural Ungrokking: Asymmetric Control of Which Rules Survive Pretraining"
+  authors:
+    - family-names: Li
+      given-names: Juliana
+    - family-names: Sreedhar
+      given-names: Diya
+  journal: "arXiv preprint"
+  year: 2026

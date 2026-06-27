@@ -3,7 +3,8 @@
 Code for the paper **"Natural Ungrokking: Asymmetric Control of Which
 Rules Survive Pretraining"** (Li & Sreedhar, 2026).
 
-Paper: [arXiv link forthcoming]
+Paper: [arXiv:2606.26050](https://arxiv.org/abs/2606.26050) · Foundations of
+Deep Generative Models (FoGen) Workshop at ICML 2026
 
 Midway through pretraining, small language models learn linguistic
 rules and then lose them, with no trace in the loss curve. This repo
@@ -12,6 +13,40 @@ probe batteries, mechanism instruments, corpus-edit interventions
 (kill and rescue), the public-checkpoint suite, and the figure and
 table generators. Every threshold and prediction was pre-registered
 (`prereg/PREREGISTRATION.md`) before the outcome data existed.
+
+## A capability emerges, then collapses
+
+![Emergence-then-collapse trajectory of the pronoun-gender rule](figures/trajectories_preview.png)
+
+**Figure 1.** The pronoun-gender rule (cued with a girl's name, resolve the
+next pronoun to *she*) under web pretraining. **(a)** Held-out accuracy on
+*conflict* probes — where the rule and the corpus-wide prior disagree — rises
+to 0.94 by step 925, then collapses to chance by the end of the *same* run; the
+*agree-condition control* (dotted) keeps climbing, so the construction stays
+solved and only the rule is lost. On TinyStories (green) the rule survives at
+ceiling. **(b)** An internal contrast margin — the model's preference for the
+rule over the surface default — crosses zero exactly at the behavioral collapse.
+
+*Implication:* a capability present at a mid-training checkpoint may not survive
+to the final model, and the failure leaves no mark on the loss curve — yet it is
+predictable from a single internal order parameter.
+
+## The control is asymmetric: cheap to destroy, hard to restore
+
+![Kill-versus-restore dose-response asymmetry](figures/step6_overlay_preview.png)
+
+**Figure 4.** A registered, two-directional causal test of the support-frequency
+law. **(a) Removal:** flipping a rule's supporting evidence into counter-evidence
+(token counts fixed) destroys it with strictly monotone dose-response. **(b)
+Restoration:** injecting support back into a collapsed corpus never produces a
+control-valid recovery, even at three times the dose that sustains the rule
+elsewhere (rule:prior ratios over 450× the sustaining level); the margin moves
+only weakly.
+
+*Implication:* retention is causally controllable but one-sided — data filtering
+or a continual-pretraining mixture shift can silently and near-irreversibly
+ungrok a capability the base model had, without deleting a single supporting
+example.
 
 ## Layout
 
@@ -75,7 +110,7 @@ the paper.
   title  = {Natural Ungrokking: Asymmetric Control of Which Rules
             Survive Pretraining},
   author = {Li, Juliana and Sreedhar, Diya},
-  journal= {arXiv preprint},
+  journal= {arXiv preprint arXiv:2606.26050},
   year   = {2026}
 }
 ```
